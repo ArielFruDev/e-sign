@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>E-Signature Section</title>
+  <style>
+    #signatureCanvas {
+      border: 1px solid #000;
+      cursor: crosshair;
+    }
+    #btnClear {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>E-Signature Section</h2>
+  <canvas id="signatureCanvas" width="400" height="200"></canvas>
+  <br>
+  <button id="btnClear">Clear</button>
+  
+  <script>
+    window.addEventListener('load', () => {
+      const canvas = document.getElementById('signatureCanvas');
+      const context = canvas.getContext('2d');
+      let isDrawing = false;
+      
+      function startPosition(e) {
+        isDrawing = true;
+        draw(e);
+      }
+      
+      function endPosition() {
+        isDrawing = false;
+        context.beginPath();
+      }
+      
+      function draw(e) {
+        if (!isDrawing) return;
+        context.lineWidth = 2;
+        context.lineCap = 'round';
+        context.strokeStyle = '#000';
+        
+        context.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+        context.stroke();
+        context.beginPath();
+        context.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+      }
+      
+      canvas.addEventListener('mousedown', startPosition);
+      canvas.addEventListener('mouseup', endPosition);
+      canvas.addEventListener('mousemove', draw);
+      
+      document.getElementById('btnClear').addEventListener('click', () => {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+      });
+    });
+  </script>
+</body>
+</html>
